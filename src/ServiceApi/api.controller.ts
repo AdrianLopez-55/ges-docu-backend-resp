@@ -13,6 +13,5 @@ export class ApiController {
 	async authLogin(@Res() res:Response,@Body() loginAuthDocumentalDTO:LoginAuthDocumentalDTO){
 		const response =  await this.apiService.loginAuthDocumental(loginAuthDocumentalDTO)
 		return res.status(HttpStatus.OK).json({response});
-		console.log(response)
 	}
 }
