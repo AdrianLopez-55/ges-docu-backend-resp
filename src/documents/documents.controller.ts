@@ -11,11 +11,14 @@ export class DocumentsController {
 	getAllDocument(){
 		return this.documentsService.getAllDocument();
 	}
-
+	/*
 	@Post()
 	createDocument(@Body() newDocument: createDocumentDTO){
-		return this.documentsService.createDocument(newDocument.title, newDocument.description)
+		return this.documentsService.createDocument(
+
+		)
 	}
+	*/
 
 	@Delete(':id')
 	deleteDocument(@Param('id') id: string){
