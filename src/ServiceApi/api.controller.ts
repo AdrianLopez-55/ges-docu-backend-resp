@@ -2,7 +2,9 @@ import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiService } from './api.service';
 import { LoginAuthDocumentalDTO } from './api.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('validate user')
 @Controller('api')
 export class ApiController {
 	constructor(
