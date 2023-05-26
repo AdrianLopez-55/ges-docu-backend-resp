@@ -51,11 +51,17 @@ export class MilestonesController {
   }
 
   @Patch(':id')
+  @ApiOperation({
+    summary: 'actualizar hito creado',
+  })
   update(@Param('id') id: string, @Body() updateMilestoneDto: UpdateMilestoneDto) {
     return this.milestonesService.update(id, updateMilestoneDto);
   }
 
   @Delete(':id')
+  @ApiOperation({
+    summary: 'eliminar hito creado',
+  })
   remove(@Param('id') id: string) {
     return this.milestonesService.remove(id);
   }

@@ -1,4 +1,4 @@
-export class RegistryDocument {
+export class Document {
 	id: string;
 	title: string;
 	author: string;

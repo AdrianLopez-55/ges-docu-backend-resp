@@ -1,9 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }));
   
   const config = new DocumentBuilder()
   .setTitle('User verification')
@@ -23,7 +30,8 @@ async function bootstrap() {
   const document2 = SwaggerModule.createDocument(app, documentApi);
   SwaggerModule.setup('api/document', app, document2);
 
-  
-  await app.listen(3000);
+  const configService = app.get(ConfigService);
+  const port = configService.get('PORT');
+  await app.listen(Number(port));
 }
 bootstrap();

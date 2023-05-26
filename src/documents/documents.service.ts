@@ -1,68 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { RegistryDocument } from './entities/documents.entity';
+import { Document } from './entities/documents.entity';
 import { updateDocumentDTO } from './dto/updateDocument.dto';
+import { CreateDocumentDTO } from './dto/createDocument.dto';
+
 
 @Injectable()
 export class DocumentsService {
-
-	private documents: RegistryDocument[] = [
-	{
-		id: '5467iu',
-		title: 'string',
-		author: 'string',
-		dateModify: 'string',
-		dateCreation: 'string',
-		documentType: 'string',
-		signatories: 'string',
-		state: 'string',
-		description: 'string',
-		lastDateRetention: 'string',
-	},
-	];
-
-	getAllDocument() {
-		return this.documents;
-	}
-
-	createDocument(
-		title: string,
-		author: string,
-		dateModify: string,
-		dateCreation: string,
-		documentType: string,
-		signatories: string,
-		state: string,
-		description: string,
-		lastDateRetention: string,
-	) {
-		const document = {
-			id: '34324rwer',
-			title,
-			author,
-			dateModify,
-			dateCreation,
-			documentType,
-			signatories,
-			state,
-			description,
-			lastDateRetention,
+	private documents: Document[] = [];
+	
+	create(createDocumentDTO: CreateDocumentDTO) {
+		const document: Document = {
+			id: 'adfasdf',
+			title: createDocumentDTO.title,
+			author: createDocumentDTO.author,
+			dateModify: createDocumentDTO.dateModify,
+			dateCreation: createDocumentDTO.dateCreation,
+			documentType: createDocumentDTO.documentType,
+			signatories: createDocumentDTO.signatories,
+			state: createDocumentDTO.state,
+			description: createDocumentDTO.description,
+			lastDateRetention: createDocumentDTO.lastDateRetention,
 		}
 		this.documents.push(document);
 		return document;
 	}
 
-	deleteDocument(id: string) {
+	async findAll() {
+		return this.documents;
+	}
+
+
+	async remove(id: string) {
 		this.documents = this.documents.filter(document => document.id !== id)
 	}
 
-	getDocumentById(id: string): RegistryDocument{
+	async findOne(id: string){
 		return this.documents.find(document => document.id === id)
 	}
 
-	updateDocument(id: string, updateFields: updateDocumentDTO): RegistryDocument {
-		const document = this.getDocumentById(id)
-		const newDocument = Object.assign(document, updateFields)
-		this.documents.map(document => document.id === id ? newDocument : document)
+	async update(id: string, updateDocumentDTO: updateDocumentDTO) {
+		const document = this.findOne(id)
+		const newDocument = Object.assign(document, updateDocumentDTO)
+		this.documents.map(document => document.id === id)
 		return newDocument;
 	}
 }

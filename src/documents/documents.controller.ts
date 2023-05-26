@@ -1,47 +1,78 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
-import { createDocumentDTO } from './dto/createDocument.dto'
 import { updateDocumentDTO } from './dto/updateDocument.dto'
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateDocumentDTO } from './dto/createDocument.dto';
+import { ApiKeyGuard } from 'src/auth/guards/apikey.guard';
 
 @ApiTags('Registry Documents')
 @Controller('documents')
 export class DocumentsController {
-
-	constructor(private documentsService:DocumentsService){}
-
-	@Get()
-	getAllDocument(){
-		return this.documentsService.getAllDocument();
-	}
-
-	@Get(':id')
-	getDocumentById(@Param('id') id: string){
-		return this.documentsService.getDocumentById(id);
-	}
-
+	constructor(private readonly documentsService:DocumentsService){}
+	
+	@UseGuards(ApiKeyGuard)
 	@Post()
-	createDocument(@Body() newDocument: createDocumentDTO){
-		return this.documentsService.createDocument(
-			newDocument.author,
-			newDocument.dateCreation,
-			newDocument.dateModify,
-			newDocument.description,
-			newDocument.documentType,
-			newDocument.lastDateRetention,
-			newDocument.signatories,
-			newDocument.state,
-			newDocument.title,
-		)
+	@ApiOperation({
+		summary: 'crear nuevo documento',
+		requestBody: {
+		  content: {
+			'aplication/json': {
+			  schema: {
+				type: 'object',
+				properties: {
+					title: {type: 'string'},
+					author: {type: 'string'},
+					dateModify: {type: 'string'},
+					dateCreation: {type: 'string'},
+					documentType: {type: 'string'},
+					signatories: {type: 'string'},
+					state:{type: 'string'},
+					description:{type: 'string'},
+					lastDateRetention: {type: 'string'},
+				},
+			  },
+			},
+		  },
+		},
+	  })
+	async create(@Body() createDocumentDTO: CreateDocumentDTO){
+		return await this.documentsService.create(createDocumentDTO)
 	}
 
-	@Delete(':id')
-	deleteDocument(@Param('id') id: string){
-		this.documentsService.deleteDocument(id);
+	@UseGuards(ApiKeyGuard)
+	@Get()
+	@ApiOperation({
+		summary: 'ver todos los documentos creados',
+	})
+	async findAll(){
+		return await this.documentsService.findAll();
+	}
+
+
+	@UseGuards(ApiKeyGuard)
+	@Get(':id')
+	@ApiOperation({
+		summary: 'ver un documento especifico creados',
+	  })
+	async findOne(@Param('id') id: string){
+		return await this.documentsService.findOne(id);
 	}
 
 	@Patch(":id")
-	updateDocument(@Param("id") id: string, @Body() updateFields: updateDocumentDTO){
-		return this.documentsService.updateDocument(id,updateFields)
+	@ApiOperation({
+		summary: 'actuaizar un documento',
+	  })
+	async update(@Param("id") id: string, @Body() updateFields: updateDocumentDTO){
+		return await this.documentsService.update(id,updateFields)
 	}
+
+	@Delete(':id')
+	@ApiOperation({
+		summary: 'eliminar un documento creado',
+	})
+	async remove(@Param('id') id: string){
+		return await this.documentsService.remove(id);
+	}
+
+
 }

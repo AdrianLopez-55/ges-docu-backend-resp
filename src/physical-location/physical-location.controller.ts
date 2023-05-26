@@ -32,21 +32,33 @@ export class PhysicalLocationController {
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'ver todas las localizaciones fisicas documento',
+  })
   findAll() {
     return this.physicalLocationService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'actualizar una localizacion fisica documento',
+  })
   findOne(@Param('id') id: number) {
     return this.physicalLocationService.findOne(+id);
   }
 
   @Patch(':id')
+  @ApiOperation({
+    summary: 'actualizar una localizacione fisica documento',
+  })
   update(@Param('id') id: number, @Body() updatePhysicalLocationDto: UpdatePhysicalLocationDto) {
-    return this.physicalLocationService.update(+id, updatePhysicalLocationDto);
+    return this.physicalLocationService.update(id, updatePhysicalLocationDto);
   }
 
   @Delete(':id')
+  @ApiOperation({
+    summary: 'eliminar una localizacione fisica documento',
+  })
   remove(@Param('id') id: number) {
     return this.physicalLocationService.remove(+id);
   }
