@@ -1,16 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Document } from './entities/documents.entity';
 import { UpdateDocumentDTO } from './dto/updateDocument.dto';
 import { CreateDocumentDTO } from './dto/createDocument.dto';
+import { DOCUMENTS_REPOSITORY } from './documents-repository';
 
 
 @Injectable()
 export class DocumentsService {
 	private readonly logger = new Logger(DocumentsService.name);
-
 	private documents: Document[] = [];
+
+	constructor(@Inject(DOCUMENTS_REPOSITORY) private readonly DocumentRepository){};
 	
-	create(createDocumentDTO: CreateDocumentDTO) {
+	async create(createDocumentDTO: CreateDocumentDTO) {
 		const document: Document = {
 			id: 'adfasdf',
 			title: createDocumentDTO.title,
@@ -25,7 +27,7 @@ export class DocumentsService {
 		}
 		this.documents.push(document);
 		this.logger.log('creating user in service')
-		return document;
+		return await document//this.DocumentRepository.create(createDocumentDTO);
 	}
 
 	async findAll() {

@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
 import { LoggerModule } from 'nestjs-pino';
 import { CORRELATION_ID_HEADER, CorrelationIdMiddleware } from './correlation-id/correlation-id.middleware';
 import { Request } from 'express'
+import { MongooseModule } from '@nestjs/mongoose';
 
 
 @Module({
@@ -40,6 +41,7 @@ import { Request } from 'express'
         }
       },
     }),
+    MongooseModule.forRoot(process.env.MONGO_URI)
   ],
   controllers: [AppController],
   providers: [AppService],
