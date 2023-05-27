@@ -1,16 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
-import { updateDocumentDTO } from './dto/updateDocument.dto'
+import { UpdateDocumentDTO } from './dto/updateDocument.dto'
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateDocumentDTO } from './dto/createDocument.dto';
-import { ApiKeyGuard } from 'src/auth/guards/apikey.guard';
+
 
 @ApiTags('Registry Documents')
 @Controller('documents')
 export class DocumentsController {
+
+	private readonly logger = new Logger(DocumentsController.name);
 	constructor(private readonly documentsService:DocumentsService){}
 	
-	@UseGuards(ApiKeyGuard)
 	@Post()
 	@ApiOperation({
 		summary: 'crear nuevo documento',
@@ -36,10 +37,10 @@ export class DocumentsController {
 		},
 	  })
 	async create(@Body() createDocumentDTO: CreateDocumentDTO){
+		this.logger.log('creating users in controller')
 		return await this.documentsService.create(createDocumentDTO)
 	}
 
-	@UseGuards(ApiKeyGuard)
 	@Get()
 	@ApiOperation({
 		summary: 'ver todos los documentos creados',
@@ -49,7 +50,6 @@ export class DocumentsController {
 	}
 
 
-	@UseGuards(ApiKeyGuard)
 	@Get(':id')
 	@ApiOperation({
 		summary: 'ver un documento especifico creados',
@@ -62,7 +62,7 @@ export class DocumentsController {
 	@ApiOperation({
 		summary: 'actuaizar un documento',
 	  })
-	async update(@Param("id") id: string, @Body() updateFields: updateDocumentDTO){
+	async update(@Param("id") id: string, @Body() updateFields: UpdateDocumentDTO){
 		return await this.documentsService.update(id,updateFields)
 	}
 

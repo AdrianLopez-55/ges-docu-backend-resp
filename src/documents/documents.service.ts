@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Document } from './entities/documents.entity';
-import { updateDocumentDTO } from './dto/updateDocument.dto';
+import { UpdateDocumentDTO } from './dto/updateDocument.dto';
 import { CreateDocumentDTO } from './dto/createDocument.dto';
 
 
 @Injectable()
 export class DocumentsService {
+	private readonly logger = new Logger(DocumentsService.name);
+
 	private documents: Document[] = [];
 	
 	create(createDocumentDTO: CreateDocumentDTO) {
@@ -22,6 +24,7 @@ export class DocumentsService {
 			lastDateRetention: createDocumentDTO.lastDateRetention,
 		}
 		this.documents.push(document);
+		this.logger.log('creating user in service')
 		return document;
 	}
 
@@ -38,10 +41,10 @@ export class DocumentsService {
 		return this.documents.find(document => document.id === id)
 	}
 
-	async update(id: string, updateDocumentDTO: updateDocumentDTO) {
+	async update(id: string, updateDocumentDTO: UpdateDocumentDTO) {
 		const document = this.findOne(id)
 		const newDocument = Object.assign(document, updateDocumentDTO)
-		this.documents.map(document => document.id === id)
+		this.documents.map(document => document.id === id ? newDocument : document)
 		return newDocument;
 	}
 }

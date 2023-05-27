@@ -8,9 +8,11 @@ import { RoadMapModule } from './road-map/road-map.module';
 import { MilestonesModule } from './milestones/milestones.module';
 import { AdditionalMetadataModule } from './additional-metadata/additional-metadata.module';
 import { PhysicalLocationModule } from './physical-location/physical-location.module';
-import { AuthModule } from './auth/auth.module';
-import { AuthMiddleware } from './auth/auth.midleware';
 import { UsersModule } from './users/users.module';
+import { LoggerModule } from 'nestjs-pino';
+import { CORRELATION_ID_HEADER, CorrelationIdMiddleware } from './correlation-id/correlation-id.middleware';
+import { Request } from 'express'
+
 
 @Module({
   imports: [
@@ -21,14 +23,29 @@ import { UsersModule } from './users/users.module';
     MilestonesModule,
     AdditionalMetadataModule,
     PhysicalLocationModule,
-    AuthModule,
     UsersModule,
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            messageKey: 'message',
+          },
+        },
+        messageKey: 'message',
+        customProps: (req: Request) => {
+          return {
+            correlationId: req[CORRELATION_ID_HEADER],
+          }
+        }
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule{
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer){
-    consumer.apply(AuthMiddleware).forRoutes('/*')
+    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
   }
 }

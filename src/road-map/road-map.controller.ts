@@ -28,8 +28,8 @@ export class RoadMapController {
       },
     },
   })
-  create(@Body() createRoadMapDto: CreateRoadMapDto) {
-    return this.roadMapService.create(createRoadMapDto);
+  async create(@Body() createRoadMapDto: CreateRoadMapDto) {
+    return await this.roadMapService.create(createRoadMapDto);
   }
 
   @Get()
