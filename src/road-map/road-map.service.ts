@@ -1,40 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRoadMapDto } from './dto/create-road-map.dto';
 import { UpdateRoadMapDto } from './dto/update-road-map.dto';
-import { RoadMap } from './entities/road-map.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { RoadMapDocument, RoadMaps } from './schema/road-map.dchema';
+import { Model } from 'mongoose';
+import { Request } from 'express';
 
 @Injectable()
 export class RoadMapService {
-  private roadMap: RoadMap[] = [];
 
-  create(createRoadMapDto: CreateRoadMapDto): RoadMap {
-    const roadMap: RoadMap = {
-      idRoadMap: 'werer',
-      name: createRoadMapDto.name,
-      description: createRoadMapDto.description,
-      dateInit: createRoadMapDto.dateInit,
-      dateEnd: createRoadMapDto.dateEnd,
-    }
-    this.roadMap.push(roadMap);
-    return roadMap ;
+  constructor(@InjectModel(RoadMaps.name) private readonly roadMapModel: Model<RoadMapDocument>) {}
+
+  async create(createRoadMapDto: CreateRoadMapDto) {
+    return await this.roadMapModel.create(createRoadMapDto);
   }
 
-  findAll() {
-    return this.roadMap;
+  async findAll(request: Request): Promise<RoadMaps[]> {
+    return this.roadMapModel.find(request.query).setOptions({sanitizeFilter: true}).exec();
   }
 
-  findOne(idRoadMap: string) {
-    return this.roadMap.find(roadMap => roadMap.idRoadMap === idRoadMap);
+  async findOne(idRoadMap: string): Promise<RoadMaps> {
+    return this.roadMapModel.findOne({_id: idRoadMap}).exec();
   }
 
-  update(idRoadMap: string, updateRoadMapDto: UpdateRoadMapDto) {
-    const roadMap = this.findOne(idRoadMap)
-    const newRoadMap = Object.assign(roadMap, updateRoadMapDto)
-    this.roadMap.map(roadMap => roadMap.idRoadMap === idRoadMap ? newRoadMap : roadMap)
-    return newRoadMap;
+  async update(idRoadMap: string, updateRoadMapDto: UpdateRoadMapDto) {
+    return this.roadMapModel.findOneAndUpdate({_id:idRoadMap}, updateRoadMapDto, {
+      new: true,
+    });
   }
 
-  remove(idRoadMap: string) {
-    return this.roadMap = this.roadMap.filter(roadMap => roadMap.idRoadMap !== idRoadMap);
+  async remove(idRoadMap: string) {
+    return this.roadMapModel.findByIdAndRemove({ _id: idRoadMap}).exec();
   }
 }

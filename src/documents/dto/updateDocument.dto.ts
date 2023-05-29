@@ -1,33 +1,48 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
-import { ApiController } from "src/ServiceApi/api.controller";
+import { IsArray, IsString, isArray } from "class-validator";
 
 export class UpdateDocumentDTO {
-	@ApiProperty()
+	@ApiProperty({example: 'DOC-001'})
 	@IsString()
-	title: string;
-	@ApiProperty()
+	readonly numberDocument: string
+
+	@ApiProperty({example: 'Resources from DataCenter'})
 	@IsString()
-	author: string;
-	@ApiProperty()
+	readonly title: string;
+
+	@ApiProperty({example: 'J. Adrian Chase'})
 	@IsString()
-	dateModify: string;
-	@ApiProperty()
+	readonly authorDocument: string;
+
+	@ApiProperty({example: '/archivos/documento001.pdf'})
 	@IsString()
-	dateCreation: string;
-	@ApiProperty()
+	readonly digitalUbication: string;
+
+	@ApiProperty({example: 'Resource'})
 	@IsString()
-	documentType: string;
-	@ApiProperty()
+	readonly documentType: string;
+
+	@ApiProperty({example: 'aprobado'})
 	@IsString()
-	signatories: string;
-	@ApiProperty()
+	readonly stateDocument: string;
+
+	@ApiProperty({example: 'Restringido'})
 	@IsString()
-	state: string
-	@ApiProperty()
+	readonly nivelAcces: string;
+
+	@ApiProperty({example: 'The resources that were sent to the data center for their ...'})
 	@IsString()
-	description: string;
-	@ApiProperty()
+	readonly description: string;
+
+	@ApiProperty({example: ['informes', 'ventas', '2023']})
+	@IsArray()
+	readonly tags: string[];
+
+	@ApiProperty({example: ['resource', 'DataCenter', 'Data']})
+	@IsArray()
+	readonly keywords: string[];
+
+	@ApiProperty({example: '2023-05-29T03:05:14.742Z'})
 	@IsString()
-	lastDateRetention: string;
+	expirationDate: Date
 }

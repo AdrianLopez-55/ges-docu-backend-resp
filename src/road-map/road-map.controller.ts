@@ -1,50 +1,38 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { RoadMapService } from './road-map.service';
 import { CreateRoadMapDto } from './dto/create-road-map.dto';
 import { UpdateRoadMapDto } from './dto/update-road-map.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ParseObjectIdPipe } from 'src/utilities/parse-object-id-pipe.pipe';
+import { Request } from 'express'
 
 @ApiTags('Road-map')
 @Controller('road-map')
 export class RoadMapController {
+
   constructor(private readonly roadMapService: RoadMapService) {}
 
   @Post()
   @ApiOperation({
     summary: 'crear nueva localisacion fisica para documento',
-    requestBody: {
-      content: {
-        'aplication/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              name: {type: 'string'},
-              description: {type: 'string'},
-              dateInit: {type: 'string'},
-              dateEnd: {type: 'string'},
-            },
-          },
-        },
-      },
-    },
   })
-  async create(@Body() createRoadMapDto: CreateRoadMapDto) {
-    return await this.roadMapService.create(createRoadMapDto);
+  create(@Body() createRoadMapDto: CreateRoadMapDto) {
+    return this.roadMapService.create(createRoadMapDto);
   }
 
   @Get()
   @ApiOperation({
     summary: 'ver todas las hojas de rutas',
   })
-  findAll() {
-    return this.roadMapService.findAll();
+  findAll(@Req() request: Request) {
+    return this.roadMapService.findAll(request);
   }
 
   @Get(':id')
   @ApiOperation({
     summary: 'buscar una hoja de ruta',
   })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseObjectIdPipe) id: string) {
     return this.roadMapService.findOne(id);
   }
 

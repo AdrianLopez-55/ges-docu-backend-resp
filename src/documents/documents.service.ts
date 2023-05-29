@@ -1,52 +1,65 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Document } from './entities/documents.entity';
+import { Injectable } from '@nestjs/common';
 import { UpdateDocumentDTO } from './dto/updateDocument.dto';
 import { CreateDocumentDTO } from './dto/createDocument.dto';
-import { DOCUMENTS_REPOSITORY } from './documents-repository';
+import { InjectModel } from '@nestjs/mongoose';
+import { DocumentDocument, Documents } from './schema/documents.schema';
+import { Model } from 'mongoose';
+import { Request } from 'express';
+
 
 
 @Injectable()
 export class DocumentsService {
-	private readonly logger = new Logger(DocumentsService.name);
-	private documents: Document[] = [];
 
-	constructor(@Inject(DOCUMENTS_REPOSITORY) private readonly DocumentRepository){};
+	constructor(@InjectModel(Documents.name) private readonly documentModel: Model<DocumentDocument>){}
 	
-	async create(createDocumentDTO: CreateDocumentDTO) {
-		const document: Document = {
-			id: 'adfasdf',
-			title: createDocumentDTO.title,
-			author: createDocumentDTO.author,
-			dateModify: createDocumentDTO.dateModify,
-			dateCreation: createDocumentDTO.dateCreation,
-			documentType: createDocumentDTO.documentType,
-			signatories: createDocumentDTO.signatories,
-			state: createDocumentDTO.state,
-			description: createDocumentDTO.description,
-			lastDateRetention: createDocumentDTO.lastDateRetention,
-		}
-		this.documents.push(document);
-		this.logger.log('creating user in service')
-		return await document//this.DocumentRepository.create(createDocumentDTO);
+	async create(createDocumentDTO: CreateDocumentDTO): Promise<Documents> {
+		return this.documentModel.create(createDocumentDTO);
 	}
 
-	async findAll() {
-		return this.documents;
+	async findAll(request: Request): Promise<Documents[]> {
+		return this.documentModel.find(request.query).setOptions({sanitizeFilter: true}).exec();
 	}
 
-
-	async remove(id: string) {
-		this.documents = this.documents.filter(document => document.id !== id)
-	}
-
-	async findOne(id: string){
-		return this.documents.find(document => document.id === id)
+	async findOne(id: string): Promise<Documents>{
+		return this.documentModel.findOne({_id: id}).exec();
 	}
 
 	async update(id: string, updateDocumentDTO: UpdateDocumentDTO) {
-		const document = this.findOne(id)
-		const newDocument = Object.assign(document, updateDocumentDTO)
-		this.documents.map(document => document.id === id ? newDocument : document)
-		return newDocument;
+		return this.documentModel.findOneAndUpdate({ _id: id }, updateDocumentDTO, {
+			new: true,
+		});
+	}
+
+	async remove(id: string) {
+		return this.documentModel.findByIdAndRemove({ _id: id}).exec();
+	}
+	
+	async addPhysicalLocation(id: string, physicalLocation: any) {
+		let document: DocumentDocument = await this.documentModel.findById(id);
+		document.physicalLocation.push(physicalLocation);
+		document.save();
+		return document;
+	}
+
+	async addComment(id: string, comment: any) {
+		let document: DocumentDocument = await this.documentModel.findById(id);
+		document.comments.push(comment);
+		document.save();
+		return document;
+	}
+
+	async addSignatureAproved(id: string, signaturedAproved: any){
+		let document: DocumentDocument = await this.documentModel.findById(id);
+		document.signatureAproved.push(signaturedAproved);
+		document.save();
+		return document
+	}
+
+	async addMilestones(id: string, milestone: any){
+		let document: DocumentDocument = await this.documentModel.findById(id);
+		document.milestone.push(milestone);
+		document.save();
+		return document
 	}
 }

@@ -1,3 +1,4 @@
+/*
 export class Document {
 	id: string;
 	title: string;
@@ -9,4 +10,7 @@ export class Document {
 	state: string
 	description: string
 	lastDateRetention: string;
+	createAt: Date;
+	updateAt: Date;
 }
+*/

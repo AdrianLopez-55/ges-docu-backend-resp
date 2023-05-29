@@ -5,14 +5,12 @@ import { ApiModule } from './ServiceApi/api.module';
 import { ConfigModule } from '@nestjs/config';
 import { DocumentsModule } from './documents/documents.module';
 import { RoadMapModule } from './road-map/road-map.module';
-import { MilestonesModule } from './milestones/milestones.module';
-import { AdditionalMetadataModule } from './additional-metadata/additional-metadata.module';
-import { PhysicalLocationModule } from './physical-location/physical-location.module';
 import { UsersModule } from './users/users.module';
-import { LoggerModule } from 'nestjs-pino';
-import { CORRELATION_ID_HEADER, CorrelationIdMiddleware } from './correlation-id/correlation-id.middleware';
-import { Request } from 'express'
+import { CorrelationIdMiddleware } from './correlation-id/correlation-id.middleware';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PassportModule } from '@nestjs/passport';
+import { AuthModule } from './auth/auth.module';
+import { CustomHeaderMiddleware } from './custom-header.middleware';
 
 
 @Module({
@@ -20,28 +18,11 @@ import { MongooseModule } from '@nestjs/mongoose';
     ApiModule,
     ConfigModule.forRoot(),
     DocumentsModule,
-    RoadMapModule,
-    MilestonesModule,
-    AdditionalMetadataModule,
-    PhysicalLocationModule,
     UsersModule,
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            messageKey: 'message',
-          },
-        },
-        messageKey: 'message',
-        customProps: (req: Request) => {
-          return {
-            correlationId: req[CORRELATION_ID_HEADER],
-          }
-        }
-      },
-    }),
-    MongooseModule.forRoot(process.env.MONGO_URI)
+    RoadMapModule,
+    MongooseModule.forRoot(process.env.MONGO_URI),
+    PassportModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -49,5 +30,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer){
     consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+    consumer.apply(CustomHeaderMiddleware).forRoutes('*');
   }
 }

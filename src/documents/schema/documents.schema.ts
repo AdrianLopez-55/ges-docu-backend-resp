@@ -1,32 +1,66 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { Document, Model } from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
+import { User } from 'src/users/schema/user.schema';
+import {PhysicalLocation, PhysicalLocationSchema} from './phisical-location.schema'
+import { Comment, CommentSchema } from './comment.schema';
+import { SignatueAproved, SignatueAprovedSchema } from './signature-aproved.schema';
+import { MIlestoneSchema, Milestone } from './milestone.schema';
+
+export type DocumentDocument = Documents & Document
 
 @Schema()
-class Documents {
-	@Prop({required: true, unique: true, index: true})
+export class Documents {
+	@Prop()
+	numberDocument: string
+
+	@Prop()
 	title: string;
+
+	@Prop({ type: mongoose.Schema.Types.String, ref: 'User'})
+	authorDocument: User;
+
 	@Prop()
-	author: string;
-	@Prop()
-	dateModify: string;
-	@Prop()
-	dateCreation: string;
+	digitalUbication: string;
+
+	@Prop([PhysicalLocationSchema])
+	physicalLocation: PhysicalLocation[];
+
 	@Prop()
 	documentType: string;
+
 	@Prop()
-	signatories: string;
+	stateDocument: string;
+
 	@Prop()
-	state: string
+	nivelAcces: string;
+
 	@Prop()
-	description: string
+	description: string;
+
+	@Prop([String])
+	tags: string[];
+
+	@Prop([CommentSchema])
+	comments: Comment[];
+
+	@Prop([String])
+	keywords: string[];
+
+	@Prop([SignatueAprovedSchema])
+	signatureAproved: SignatueAproved[];
+
+	@Prop([MIlestoneSchema])
+	milestone: Milestone[];
+
 	@Prop()
-	lastDateRetention: string;
-	@Prop({default: Date.now()})
-	updateAt: Date
+	expirationDate: Date;
+
 	@Prop({default: Date.now()})
 	createdAt: Date
+
+	@Prop({default: Date.now()})
+	updateAt: Date
 }
 
 export const DocumentsSchema = SchemaFactory.createForClass(Documents);
-export type DocumentsDocument = Documents & Document;
 export type DocumentsModel = Model<Documents>;
