@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, HttpCode, Req } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { UpdateDocumentDTO } from './dto/updateDocument.dto'
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiFoundResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateDocumentDTO } from './dto/createDocument.dto';
 import { Request } from 'express';
 import { ParseObjectIdPipe } from 'src/utilities/parse-object-id-pipe.pipe';
@@ -9,6 +9,7 @@ import { CreateCommentDto } from './dto/createComment.dto';
 import { CreatePhysicalLocationDto } from './dto/createPhysicalLocation.dto';
 import { CreateSignatureAprovedDto } from './dto/createSignatureAproved.dto';
 import { CreateMilestoneDto } from './dto/createMilestone.dto';
+import { Documents } from './schema/documents.schema';
 
 
 @Controller('documents')
@@ -29,7 +30,7 @@ export class DocumentsController {
 	@ApiOperation({
 		summary: 'ver todos los documentos creados',
 	})
-	@HttpCode(200)
+	@ApiOkResponse({description: 'documentos encontrados'})
 	findAll(@Req() request: Request){
 		return this.documentsService.findAll(request);
 	}
@@ -101,5 +102,4 @@ export class DocumentsController {
 	) {
 		return this.documentsService.addMilestones(id, milestone)
 	}
-
 }

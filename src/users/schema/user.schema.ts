@@ -22,4 +22,4 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-export type UserModel = Model<User>;
+//export type userModel = Model<User>;

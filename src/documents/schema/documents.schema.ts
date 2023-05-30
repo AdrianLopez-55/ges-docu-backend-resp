@@ -5,6 +5,7 @@ import {PhysicalLocation, PhysicalLocationSchema} from './phisical-location.sche
 import { Comment, CommentSchema } from './comment.schema';
 import { SignatueAproved, SignatueAprovedSchema } from './signature-aproved.schema';
 import { MIlestoneSchema, Milestone } from './milestone.schema';
+import { RoadMaps } from 'src/road-map/schema/road-map.dchema';
 
 export type DocumentDocument = Documents & Document
 
@@ -51,6 +52,9 @@ export class Documents {
 
 	@Prop([MIlestoneSchema])
 	milestone: Milestone[];
+
+	@Prop([{ type: mongoose.Schema.Types.String, ref: 'RoadMaps'}])
+	roadMap: RoadMaps;
 
 	@Prop()
 	expirationDate: Date;
