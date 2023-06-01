@@ -17,6 +17,9 @@ export class Milestone {
 
 	@Prop()
 	description: string;
+
+	@Prop({default: true})
+	active: boolean
 }
 
 export const MIlestoneSchema = SchemaFactory.createForClass(Milestone);

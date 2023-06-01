@@ -7,8 +7,12 @@ export type SignatueAprovedDocument = SignatueAproved & Document
 export class SignatueAproved {
 	@Prop()
 	user: string
+	
 	@Prop()
 	dateSignatured: Date
+
+	@Prop({default: true})
+	active: boolean
 }
 
 export const SignatueAprovedSchema = SchemaFactory.createForClass(SignatueAproved);

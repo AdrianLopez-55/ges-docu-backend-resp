@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, HttpCode, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, HttpCode, Req, Query, Put } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { UpdateDocumentDTO } from './dto/updateDocument.dto'
-import { ApiFoundResponse, ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateDocumentDTO } from './dto/createDocument.dto';
 import { Request } from 'express';
 import { ParseObjectIdPipe } from 'src/utilities/parse-object-id-pipe.pipe';
@@ -30,15 +30,19 @@ export class DocumentsController {
 	@ApiOperation({
 		summary: 'ver todos los documentos creados',
 	})
-	@ApiOkResponse({description: 'documentos encontrados'})
+	@ApiNotFoundResponse({ description: 'The documents cant find'})
+	@ApiQuery({name: 'numberDOocument', required: false, description: 'search document by numer document'})
+	@ApiQuery({name: 'title', required: false, description: 'search document by title'})
+	@ApiQuery({name: 'author', required: false, description: 'search document by author'})
+	@ApiResponse({ status: 200, description: 'doument found'})
 	findAll(@Req() request: Request){
 		return this.documentsService.findAll(request);
 	}
 
 	@Get(':id')
 	@ApiOperation({
-		summary: 'ver un documento especifico creados',
-	  })
+		summary: 'search document by id',
+	})
 	findOne(@Param('id', ParseObjectIdPipe) id: string){
 		return this.documentsService.findOne(id);
 	}
@@ -47,7 +51,11 @@ export class DocumentsController {
 	@ApiOperation({
 		summary: 'actuaizar un documento',
 	  })
-	update(@Param("id") id: string, @Body() updateDocumentDTO: UpdateDocumentDTO){
+	async update(@Param("id") id: string, @Body() updateDocumentDTO: UpdateDocumentDTO){
+		const document = await this.documentsService.findOne(id)
+		if(!document.active){
+			throw new ForbiddenException('documento inactivo')
+		}
 		return this.documentsService.update(id, updateDocumentDTO)
 	}
 

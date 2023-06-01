@@ -23,7 +23,7 @@ import { LoginModule } from './login/login.module';
     DocumentsModule,
     UsersModule,
     RoadMapModule,
-    MongooseModule.forRoot(process.env.MONGO_URI),
+    MongooseModule.forRoot('mongodb+srv://ct55609:cI5cg4yJgDzvtil1@blog.pkkqspg.mongodb.net/documents-crud'),
     PassportModule,
     AuthModule,
     LoginModule,
