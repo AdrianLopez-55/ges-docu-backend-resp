@@ -34,18 +34,6 @@ export class UpdateDocumentDTO {
 	@IsString()
 	readonly description: string;
 
-	@ApiProperty({example: ['informes', 'ventas', '2023']})
-	@IsArray()
-	readonly tags: string[];
-
-	@ApiProperty({example: ['resource', 'DataCenter', 'Data']})
-	@IsArray()
-	readonly keywords: string[];
-
-	@ApiProperty({example: 'roadMap-047'})
-	@IsString()
-	readonly roadMap: string
-
 	@ApiProperty({example: '2023-05-29T03:05:14.742Z'})
 	@IsString()
 	expirationDate: Date

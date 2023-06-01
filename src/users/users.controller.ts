@@ -7,7 +7,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 
 @Controller('users')
-@ApiTags('User')
 export class UsersController {
 
 	constructor(private readonly userService:UsersService){}

@@ -4,11 +4,10 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {cors: true});
-
+  const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
+    // whitelist: true,
+    // forbidNonWhitelisted: true,
   }),);
   
   const config = new DocumentBuilder()
@@ -16,7 +15,6 @@ async function bootstrap() {
   .setDescription('api login auth and registry documents')
   .setVersion('1.0')
   .addTag('validate user')
-  .addTag('User')
   .addTag('Registry Documents')
   .addTag('Road-map')
   .build();
@@ -24,7 +22,7 @@ async function bootstrap() {
   
   SwaggerModule.setup('api', app, document);
 
-  const PORT = process.env.PORT || 3000;
-  await app.listen(3000);
+  //const PORT = process.env.PORT || 3000;
+  await app.listen(8085);
 }
 bootstrap();

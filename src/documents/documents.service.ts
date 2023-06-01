@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import { UpdateDocumentDTO } from './dto/updateDocument.dto';
 import { CreateDocumentDTO } from './dto/createDocument.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -61,5 +61,12 @@ export class DocumentsService {
 		document.milestone.push(milestone);
 		document.save();
 		return document
+	}
+
+	async inactiverDocument(id: string, active: boolean) {
+		const document: DocumentDocument = await this.documentModel.findById(id);
+		document.active = false;
+		await document.save();
+		return document;
 	}
 }

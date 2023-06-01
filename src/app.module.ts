@@ -11,9 +11,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 import { CustomHeaderMiddleware } from './custom-header.middleware';
-//import { TokenValidationMiddleware } from './token-validation.middleware';
-import { LoginService } from './login/login.service';
-import { LoginModule } from './login/login.module';
+// import { MyController } from './myControllerGetPersonal.controller';
+// import { ExternalDataService } from './externalDataService.service';
 
 
 @Module({
@@ -25,16 +24,14 @@ import { LoginModule } from './login/login.module';
     RoadMapModule,
     MongooseModule.forRoot('mongodb+srv://ct55609:cI5cg4yJgDzvtil1@blog.pkkqspg.mongodb.net/documents-crud'),
     PassportModule,
-    AuthModule,
-    LoginModule,
+    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService, LoginService],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer){
     consumer.apply(CorrelationIdMiddleware).forRoutes('*');
-    //consumer.apply(CustomHeaderMiddleware).forRoutes('*');
-    //consumer.apply(TokenValidationMiddleware).forRoutes('*')
+    consumer.apply(CustomHeaderMiddleware).forRoutes('*');
   }
 }

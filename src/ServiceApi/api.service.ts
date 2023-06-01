@@ -6,7 +6,7 @@ import { LoginAuthDocumentalDTO } from './api.dto';
 
 @Injectable()
 export class ApiService {
-	private readonly apiSeguridad = process.env.API_SEGU
+	private readonly apiSeguridadDocumental = process.env.API_SEGURIDAD
 	constructor(
 		private readonly httpService: HttpService,
 	) {}
@@ -17,8 +17,7 @@ export class ApiService {
 
 	async loginAuthDocumental(loginAuthDocumentalDTO:LoginAuthDocumentalDTO):Promise<Observable<AxiosResponse<any[]>>>{
 		console.log(loginAuthDocumentalDTO)
-		const response = await this.httpService.post(`https://billowing-wave-7639.fly.dev/auth/login`,loginAuthDocumentalDTO).toPromise();
-		console.log(response.data)
+		const response = await this.httpService.post(`${this.apiSeguridadDocumental}/auth/login`,loginAuthDocumentalDTO).toPromise();
 		return response.data
 	  }
 	}
