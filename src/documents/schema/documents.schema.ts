@@ -10,7 +10,7 @@ export type DocumentDocument = Documents & Document
 
 @Schema()
 export class Documents {
-	@Prop()
+	@Prop({default: () => `DOC-${incrementalValue(0)}`})
 	numberDocument: string
 
 	@Prop()
@@ -58,3 +58,9 @@ export class Documents {
 
 export const DocumentsSchema = SchemaFactory.createForClass(Documents);
 export type DocumentsModel = Model<Documents>;
+
+function incrementalValue(count: number): string {
+	const nextValue = count + 1;
+	const paddedValue = String(nextValue).padStart(3, '0');
+	return `DOC-${paddedValue}`;
+}

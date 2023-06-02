@@ -6,8 +6,8 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({
-    // whitelist: true,
-    // forbidNonWhitelisted: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
   }),);
   
   const config = new DocumentBuilder()
@@ -18,9 +18,17 @@ async function bootstrap() {
   .addTag('Registry Documents')
   .addTag('Road-map')
   .build();
-  const document = SwaggerModule.createDocument(app, config);
+
   
-  SwaggerModule.setup('api', app, document);
+  const document = SwaggerModule.createDocument(app, config);
+
+  
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      filter: true,
+      showRequestDuration: true,
+    }
+  });
 
   //const PORT = process.env.PORT || 3000;
   await app.listen(8085);

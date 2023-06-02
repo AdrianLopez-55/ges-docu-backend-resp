@@ -1,15 +1,74 @@
-version: '3.4'
-
+version: '3'
 services:
-  mongo:
-    container_name: mongo
-    image: 'mongo:6.0.6'
-    environment:
-      - MONGO_DATA_DIR=/data/db
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - '27017:27017'
-    volumes:
-      - mongo:/data/db
-
-volumes:
+      - 8085:8085
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - mongo
   mongo:
+    image: mongo
+    volumes:
+      - ./data:/data/db
+
+
+# version: '3.9'
+# services:
+#   dev:
+#     container_name: server-dev
+#     image: server-dev:1.0.0
+#     build:
+#       context: .
+#       target: development
+#       dockerfile: ./Dockerfile
+#     command: npm run start:debug
+#     ports:
+#       - 8085:8086
+#       - 9229:9229
+#     networks:
+#       - server-network
+#     volumes:
+#       - .:/usr/src/app
+#       - /usr/src/app/node_modules
+#     restart: unless-stopped
+#     depends_on:
+#       - mongo
+#       - mongo-express
+
+#   mongo:
+#     image: mongo:6.0.6
+#     container_name: mongo
+#     environment:
+#         - MONGO_INITDB_ROOT_USERNAME=fundation
+#         - MONGO_INITDB_ROOT_PASSWORD=freedbconect221
+#     restart: unless-stopped
+#     ports:
+#       - "27017:27017"
+#     networks:
+#       - server-network
+#     volumes:
+#       - ./database/db:/data/db
+#       - ./database/dev.archive:/Databases/dev.archive
+#       - ./database/production:/Databases/production
+
+#   mongo-express:
+#     image: mongo-express:latest
+#     restart: always
+#     ports:
+#       - 8082:8081
+#     environment:
+#       - ME_CONFIG_MONGODB_SERVER=10.10.214.219
+#       - ME_CONFIG_MONGODB_PORT=27017
+#       - ME_CONFIG_MONGODB_AUTH_USERNAME=fundation
+#       - ME_CONFIG_MONGODB_AUTH_PASSWORD=freefundation221
+#       - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+#     links:
+#       - mongo
+#     networks:
+#       - server-network
+# networks:
+#   server-network:

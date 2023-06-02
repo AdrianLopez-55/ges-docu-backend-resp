@@ -1,31 +1,22 @@
-FROM debian:bullseye as builder
+# Establece la imagen base de NodeJS con la versión adecuada
+FROM node:14-alpine
 
-ENV PATH=/usr/local/node/bin:$PATH
-ARG NODE_VERSION=18.12.1
-
-RUN apt-get update; apt install -y curl python-is-python3 pkg-config build-essential && \
-    curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
-    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
-rm -rf /tmp/node-build-master
-
-RUN mkdir /app
+# Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
+# Copia los archivos de configuración y código fuente del proyecto
+COPY package*.json ./
+COPY yarn.lock ./
 COPY . .
 
-RUN npm install && npm run build
+# Instala las dependencias del proyecto
+RUN npm install
 
+# Expone el puerto en el que se ejecuta la aplicación NestJS
+EXPOSE 3000
 
-FROM debian:bullseye-slim
+# Define las variables de entorno para la conexión a MongoDB
+ENV MONGO_URI mongodb://fundation:freefundation221@10.10.214.219:27017/
 
-COPY --from=builder /usr/local/node /usr/local/node
-COPY --from=builder /app /app
-
-ENV HOST 0.0.0.0
-EXPOSE 8085
-
-WORKDIR /app
-ENV NODE_ENV production
-ENV PATH /usr/local/node/bin:$PATH
-
-CMD [ "npm", "run", "start:dev", "--host", "0.0.0.0" ]
+# Inicia la aplicación NestJS
+CMD ["yarn", "start:dev"]

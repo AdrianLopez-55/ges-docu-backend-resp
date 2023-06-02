@@ -22,7 +22,7 @@ import { CustomHeaderMiddleware } from './custom-header.middleware';
     DocumentsModule,
     UsersModule,
     RoadMapModule,
-    MongooseModule.forRoot('mongodb+srv://ct55609:cI5cg4yJgDzvtil1@blog.pkkqspg.mongodb.net/documents-crud'),
+    MongooseModule.forRoot(process.env.MONGO_URI, {dbName: process.env.DB_NAME}),
     PassportModule,
     AuthModule
   ],
