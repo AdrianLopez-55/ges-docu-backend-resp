@@ -4,10 +4,14 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {cors: true});
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
+    transform: true,
+    transformOptions: {
+      enableImplicitConversion: true,
+    }
   }),);
   
   const config = new DocumentBuilder()
@@ -15,8 +19,10 @@ async function bootstrap() {
   .setDescription('api login auth and registry documents')
   .setVersion('1.0')
   .addTag('validate user')
+  .addTag('validar-url')
   .addTag('Registry Documents')
   .addTag('Road-map')
+  .addBearerAuth()
   .build();
 
   

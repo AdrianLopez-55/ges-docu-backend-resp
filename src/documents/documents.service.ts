@@ -5,11 +5,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { DocumentDocument, Documents } from './schema/documents.schema';
 import { Model } from 'mongoose';
 import { Request } from 'express';
+import { PaginationDto } from 'src/common/pagination.dto';
 
 
 
 @Injectable()
 export class DocumentsService {
+
+	private defaultLimit: number
 
 	constructor(@InjectModel(Documents.name) private readonly documentModel: Model<DocumentDocument>){}
 	
@@ -20,6 +23,14 @@ export class DocumentsService {
 	async findAll(request: Request): Promise<Documents[]> {
 		return this.documentModel.find(request.query).setOptions({sanitizeFilter: true}).exec();
 	}
+
+	findAllPaginate( paginationDto: PaginationDto ) {
+		const { limit = this.defaultLimit, offset = 0 } = paginationDto;
+	
+		return this.documentModel.find()
+		  .limit( limit )
+		  .skip( offset )
+	  }
 
 	async findOne(id: string): Promise<Documents>{
 		return this.documentModel.findOne({_id: id}).exec();

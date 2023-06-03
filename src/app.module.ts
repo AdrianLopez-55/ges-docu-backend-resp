@@ -11,6 +11,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 import { CustomHeaderMiddleware } from './custom-header.middleware';
+import { TokenService } from './validatorUrlToken/token.service';
+import { ValidarUrlController } from './validatorUrlToken/validarUrl.controller';
+import { HttpModule } from '@nestjs/axios';
 // import { MyController } from './myControllerGetPersonal.controller';
 // import { ExternalDataService } from './externalDataService.service';
 
@@ -24,10 +27,11 @@ import { CustomHeaderMiddleware } from './custom-header.middleware';
     RoadMapModule,
     MongooseModule.forRoot(process.env.MONGO_URI, {dbName: process.env.DB_NAME}),
     PassportModule,
-    AuthModule
+    AuthModule,
+    HttpModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, ValidarUrlController],
+  providers: [AppService, TokenService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer){
