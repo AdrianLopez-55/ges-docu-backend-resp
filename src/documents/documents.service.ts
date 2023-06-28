@@ -4,42 +4,82 @@ import { CreateDocumentDTO } from './dto/createDocument.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { DocumentDocument, Documents } from './schema/documents.schema';
 import { Model } from 'mongoose';
-import { Request } from 'express';
+import { Request, response } from 'express';
 import { PaginationDto } from 'src/common/pagination.dto';
-
-
+import { HttpService } from '@nestjs/axios';
+import { Observable, map } from 'rxjs';
 
 @Injectable()
 export class DocumentsService {
 
 	private defaultLimit: number
 
-	constructor(@InjectModel(Documents.name) private readonly documentModel: Model<DocumentDocument>){}
+	constructor(@InjectModel(Documents.name) private readonly documentModel: Model<DocumentDocument>, private readonly httpService: HttpService){}
 	
 	async create(createDocumentDTO: CreateDocumentDTO): Promise<Documents> {
+		// const personalDataUrl = process.env.API_PERSONAL;
+		// try {
+		// 	const response = await this.httpService.get(`${personalDataUrl}/api/personal`).toPromise();
+		// 	console.log(response.data)
+		// 	const personalData = response.data;
+		// 	const selectedAutor = personalData.name;
+		// 	console.log(selectedAutor)
+		// 	const documentToRegister = {
+		// 		...createDocumentDTO,
+		// 		authorDocument: selectedAutor,
+		// 	};
+
+		// const createdDocument = new this.documentModel(documentToRegister);
+		// console.log(createdDocument)
+		// const savedDocument = await createdDocument.save();
+		// return savedDocument
+		// } catch (error){
+		// 	console.log(error);
+		// 	throw new Error('error al registrar documento')
+		// }
 		return this.documentModel.create(createDocumentDTO);
 	}
 
+	// getPersonalId(_id: string): Observable<any>{
+	// 	const url = `${process.env.API_PERSONAL}/api/personal/${_id}`
+	// 	return this.httpService.get(url).pipe(
+	// 		map(response => response.data),
+	// 	)
+	// }
+	
+
 	async findAll(request: Request): Promise<Documents[]> {
-		return this.documentModel.find(request.query).setOptions({sanitizeFilter: true}).exec();
+		//const sortOptions = sort ? { [sort]: 1 } : {};
+		return this.documentModel.find(request.query).sort({numberDocument: 1}).setOptions({sanitizeFilter: true}).exec();
+	}
+
+	async findDocumentsActive(): Promise<Documents[]>{
+		return this.documentModel.find(({active: true})).sort({numberDocument: 1}).exec();
+	}
+
+	async findDocumentsInactive(): Promise<Documents[]>{
+		return this.documentModel.find(({active: false})).exec();
 	}
 
 	findAllPaginate( paginationDto: PaginationDto ) {
 		const { limit = this.defaultLimit, offset = 0 } = paginationDto;
-	
-		return this.documentModel.find()
+		return this.documentModel.find({active: true})
 		  .limit( limit )
 		  .skip( offset )
-	  }
+	}
 
 	async findOne(id: string): Promise<Documents>{
 		return this.documentModel.findOne({_id: id}).exec();
 	}
 
+	async getVersion(id: string): Promise<Documents>{
+		const versions = await this.documentModel.findOne({_id:id}).select('-__v')
+		return versions;
+	}
+
 	async update(id: string, updateDocumentDTO: UpdateDocumentDTO) {
-		return this.documentModel.findOneAndUpdate({ _id: id }, updateDocumentDTO, {
-			new: true,
-		});
+		const document = this.documentModel.findOneAndUpdate({ _id: id }, updateDocumentDTO, {new: true},).exec();
+		return (await document).save();
 	}
 
 	async remove(id: string) {
@@ -81,5 +121,10 @@ export class DocumentsService {
 		return document;
 	}
 
-
+	async activerDocument(id: string, active: boolean){
+		const document: DocumentDocument = await this.documentModel.findById(id);
+		document.active = true;
+		await document.save();
+		return document
+	}
 }

@@ -8,7 +8,7 @@ import { MIlestoneSchema, Milestone } from './milestone.schema';
 
 export type DocumentDocument = Documents & Document
 
-@Schema()
+@Schema({versionKey: '__v'})
 export class Documents {
 	@Prop({default: () => `DOC-${incrementalValue(0)}`})
 	numberDocument: string
@@ -33,6 +33,9 @@ export class Documents {
 
 	@Prop()
 	nivelAcces: string;
+
+	@Prop()
+	category: string;
 
 	@Prop()
 	description: string;
