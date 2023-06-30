@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Document, Model, mongo } from 'mongoose';
 import { User } from 'src/users/schema/user.schema';
 // import {PhysicalLocation, PhysicalLocationSchema} from './phisical-location.schema'
 import { Comment, CommentSchema } from './comment.schema';
@@ -16,11 +16,14 @@ export class Documents {
 	@Prop()
 	title: string;
 
-	@Prop({ type: mongoose.Schema.Types.String, ref: 'User'})
-	authorDocument: User;
+	// @Prop({ type: mongoose.Schema.Types.String, ref: 'User'})
+	// authorDocument: User;
 
 	@Prop()
-	digitalUbication: string;
+	authorDocument: mongoose.Schema.Types.Mixed
+
+	// @Prop()
+	// digitalUbication: string;
 
 	// @Prop([PhysicalLocationSchema])
 	// physicalLocation: PhysicalLocation[];
@@ -34,11 +37,14 @@ export class Documents {
 	@Prop()
 	nivelAcces: string;
 
-	@Prop()
-	category: string;
+	// @Prop()
+	// categoryDocument: string;
 
 	@Prop()
 	description: string;
+
+	@Prop({default: null})
+	fileRegister: mongoose.Schema.Types.Mixed;
 
 	@Prop([CommentSchema])
 	comments: Comment[];

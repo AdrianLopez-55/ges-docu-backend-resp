@@ -1,29 +1,28 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
 
-
-export class ObtainDataPersonalDTO {
+export class UpdateFileRegisterDTO {
 	@ApiProperty()
 	@IsString()
-	_idPersonal?: string
-	
-	@ApiProperty()
-	@IsString()
-	name?: string;
+	filename: string
 
 	@ApiProperty()
-	@IsString()
-	ci?: string;
+	@IsNumber()
+	size: number
 
 	@ApiProperty()
 	@IsString()
-	email?: string;
+	filePath: string
 
 	@ApiProperty()
 	@IsString()
-	phone?: string;
+	status: string
 
 	@ApiProperty()
 	@IsString()
-	nationality?: string;
+	category: string
+
+	@ApiProperty()
+	@IsString()
+	extension: string
 }
