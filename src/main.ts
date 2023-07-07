@@ -3,9 +3,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType  } from '@nestjs/common';
 import getConfig from './config/configuration'
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {cors: true});
+  app.use(express.json({ limit: '10mb' }));
   // app.enableVersioning({
   //   type: VersioningType.HEADER,
   //   header: 'v=',
@@ -26,6 +28,9 @@ async function bootstrap() {
   .addTag('Validate Token')
   .addTag('Registry Documents')
   .addTag('External Data Personal')
+  .addTag('external-organization-chart-data')
+  .addTag('documentation-type')
+  .addTag('Permissions')
   .addTag('Road-map')
   .addBearerAuth()
   .build();

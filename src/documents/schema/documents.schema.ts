@@ -5,6 +5,7 @@ import { User } from 'src/users/schema/user.schema';
 import { Comment, CommentSchema } from './comment.schema';
 import { SignatueAproved, SignatueAprovedSchema } from './signature-aproved.schema';
 import { MIlestoneSchema, Milestone } from './milestone.schema';
+import { DocumentationType } from 'src/documentation-type/schema/documentation-type.schema';
 
 export type DocumentDocument = Documents & Document
 
@@ -19,7 +20,7 @@ export class Documents {
 	// @Prop({ type: mongoose.Schema.Types.String, ref: 'User'})
 	// authorDocument: User;
 
-	@Prop()
+	@Prop({default: null})
 	authorDocument: mongoose.Schema.Types.Mixed
 
 	// @Prop()
@@ -28,14 +29,17 @@ export class Documents {
 	// @Prop([PhysicalLocationSchema])
 	// physicalLocation: PhysicalLocation[];
 
+	// @Prop()
+	// documentType: string;
+
 	@Prop()
-	documentType: string;
+	documentationType: mongoose.Schema.Types.Mixed
 
 	@Prop()
 	stateDocument: string;
 
 	@Prop()
-	nivelAcces: string;
+	documentDestinations: mongoose.Schema.Types.Mixed;
 
 	// @Prop()
 	// categoryDocument: string;
@@ -54,6 +58,7 @@ export class Documents {
 
 	@Prop([MIlestoneSchema])
 	milestone: Milestone[];
+
 
 	@Prop({default: true})
 	active: boolean

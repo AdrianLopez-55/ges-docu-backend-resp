@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsString, isString } from "class-validator";
+import { DocumentationType } from "src/documentation-type/schema/documentation-type.schema";
 
 export class CreateDocumentDTO {
 
@@ -7,29 +8,21 @@ export class CreateDocumentDTO {
 	@IsString()
 	readonly title: string;
 
-	// @ApiProperty({example: 'J. Adrian Chase'})
-	// @IsString()
-	// readonly authorDocument: string;
-
 	@ApiProperty({example: '8574898'})
 	@IsString()
-	readonly ciPersonal: string;
-
-	// @ApiProperty({example: '/archivos/documento001.pdf'})
-	// @IsString()
-	// readonly digitalUbication: string;
+	ciPersonal: string;
 	
-	@ApiProperty({example: 'Contract'})
+	@ApiProperty({example: 'Costos'})
 	@IsString()
-	readonly documentType: string;
+	documentType: string;
 
 	@ApiProperty({example: 'Revision'})
 	@IsString()
 	readonly stateDocument: string;
 
-	@ApiProperty({example: 'restricted'})
+	@ApiProperty({example: 'derecho'})
 	@IsString()
-	readonly nivelAcces: string;
+	documentDestinations: string;
 
 	// @ApiProperty({example: 'Informes'})
 	// @IsString()
@@ -39,7 +32,7 @@ export class CreateDocumentDTO {
 	@IsString()
 	readonly description: string;
 
-	@ApiProperty({example: 'data:@file/jpeg;base64,/9jqw4AAQ...'})
+	@ApiProperty({example: 'data:@file/jpeg;base64,/9jq'})
 	file: string
 
 

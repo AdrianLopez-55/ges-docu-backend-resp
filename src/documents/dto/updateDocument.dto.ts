@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsString, isArray } from "class-validator";
+import { DocumentationType } from "src/documentation-type/schema/documentation-type.schema";
 
 export class UpdateDocumentDTO {
 
@@ -7,34 +8,38 @@ export class UpdateDocumentDTO {
 	@IsString()
 	readonly title: string;
 
-	@ApiProperty({example: 'J. Adrian Chase'})
-	@IsString()
-	readonly authorDocument: string;
+	// @ApiProperty({example: 'J. Adrian Chase'})
+	// @IsString()
+	// readonly authorDocument: string;
 
-	@ApiProperty({example: '/archivos/documento001.pdf'})
+	@ApiProperty({example: '8574898'})
 	@IsString()
-	readonly digitalUbication: string;
+	ciPersonal: string;
 
-	@ApiProperty({example: 'Resource'})
+	// @ApiProperty({example: '/archivos/documento001.pdf'})
+	// @IsString()
+	// readonly digitalUbication: string;
+	
+	@ApiProperty({example: 'Costos'})
 	@IsString()
-	readonly documentType: string;
+	documentType: string;
 
-	@ApiProperty({example: 'aprobado'})
+	@ApiProperty({example: 'Revision'})
 	@IsString()
 	readonly stateDocument: string;
 
-	@ApiProperty({example: 'Restringido'})
+	@ApiProperty({example: 'derecho'})
 	@IsString()
-	readonly nivelAcces: string;
+	documentDestinations: string;
 
-	@ApiProperty({example: 'Informes'})
-	@IsString()
-	readonly category: string
+	// @ApiProperty({example: 'Informes'})
+	// @IsString()
+	// category: string
 
-	@ApiProperty({example: 'The resources that were sent to the data center for their ...'})
+	@ApiProperty({example: 'contract document registration for new staff. It is on revision'})
 	@IsString()
 	readonly description: string;
 
-	@ApiProperty({example: 'data:@file/jpeg;base64,/9jqw4AAQ...'})
+	@ApiProperty({example: 'data:@file/jpeg;base64,/9jq'})
 	file: string
 }

@@ -4,9 +4,9 @@ import { IsString } from "class-validator";
 export class LoginCentralAuthDTO{
 	@ApiProperty()
 	@IsString()
-	app: string;
+	token: string;
 	
 	@ApiProperty()
 	@IsString()
-	token: string;
+	app: string;
 }
