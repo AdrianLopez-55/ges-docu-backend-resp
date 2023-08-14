@@ -834,38 +834,38 @@ export class DocumentsService {
     );
   }
 
-  async updateWorkflowStep(documentId: string): Promise<Documents> {
-    const document = await this.documentModel.findById(documentId);
-    if (!document) {
-      // Handle document not found
-      throw new NotFoundException('Documento no encontrado');
-    }
-    // Crear el nuevo paso
-    const nuevoPaso: WorkflowStep = {
-      paso: 6,
-      oficina: 'nueva_oficina',
-      completado: false,
-      _id: 'nuevo_id',
-    };
-    console.log(document.workflow.steps[0][0].pasos);
+  // async updateWorkflowStep(documentId: string): Promise<Documents> {
+  //   const document = await this.documentModel.findById(documentId);
+  //   if (!document) {
+  //     // Handle document not found
+  //     throw new NotFoundException('Documento no encontrado');
+  //   }
+  //   // Crear el nuevo paso
+  //   const nuevoPaso: WorkflowStep = {
+  //     paso: 6,
+  //     oficina: 'nueva_oficina',
+  //     completado: false,
+  //     _id: 'nuevo_id',
+  //   };
+  //   console.log(document.workflow.steps[0][0].pasos);
 
-    // Asegurarse de que pasosExistentes sea una matriz antes de intentar push
-    if (Array.isArray(document.workflow.steps[0])) {
-      const pasosExistentes = document.workflow.steps[0][0].pasos;
-      console.log(pasosExistentes);
+  //   // Asegurarse de que pasosExistentes sea una matriz antes de intentar push
+  //   if (Array.isArray(document.workflow.steps[0])) {
+  //     const pasosExistentes = document.workflow.steps[0][0].pasos;
+  //     console.log(pasosExistentes);
 
-      // Agregar el nuevo paso a la lista de pasos
-      pasosExistentes.push(nuevoPaso);
+  //     // Agregar el nuevo paso a la lista de pasos
+  //     pasosExistentes.push(nuevoPaso);
 
-      // Guardar el documento actualizado en la base de datos
-      await document.save();
+  //     // Guardar el documento actualizado en la base de datos
+  //     await document.save();
 
-      return document;
-    } else {
-      console.log();
-      throw new Error('La estructura de pasos no es la esperada');
-    }
-  }
+  //     return document;
+  //   } else {
+  //     console.log();
+  //     throw new Error('La estructura de pasos no es la esperada');
+  //   }
+  // }
 
   async generatePDF(title: string, date: string): Promise<Buffer> {
     return new Promise<Buffer>((resolve, reject) => {
