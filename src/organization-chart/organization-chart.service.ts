@@ -1,30 +1,28 @@
-import { Injectable } from '@nestjs/common';
-import { CreateOrganizationChartDto } from './dto/create-organization-chart.dto';
-import { UpdateOrganizationChartDto } from './dto/update-organization-chart.dto';
-import getConfig from '../config/configuration'
+import { HttpException, Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
 export class OrganizationChartService {
+  private readonly baseUrl: string = `${process.env.API_ORGANIZATION_CHART_MAIN}`
 
   public async findAll(url: string): Promise<any> {
     try {
-      const response = await axios.get(url);
-      return response.data
+      const response = await axios.get(this.baseUrl);
+      return response.data;
     } catch (error) {
-      throw new Error('Error al obtener los datos de organization chart')
+      throw new Error('Error al obtener los datos de organization chart');
     }
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} organizationChart`;
-  }
-
-  update(id: string, updateOrganizationChartDto: UpdateOrganizationChartDto) {
-    return `This action updates a #${id} organizationChart`;
-  }
-
-  remove(id: string) {
-    return `This action removes a #${id} organizationChart`;
+  public async findById(id: string): Promise<any>{
+    try {
+      const response = await axios.get(`${this.baseUrl}/${id}`)
+      if(!response){
+        throw new HttpException(`no se encontro la oficina: ${id}`, 404)
+      }
+      return response.data;
+    } catch (error) {
+      throw new HttpException('error al obtener los datos', 500)
+    }
   }
 }
